@@ -6,6 +6,6 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-../client/target/*/**
-../server/target/*/**
-../common/target/*/**
+../client/target
+../server/target
+../common/target

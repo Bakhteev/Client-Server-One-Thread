@@ -17,8 +17,8 @@ public class RequestHandlerModule {
     public String readUTF() throws IOException {
         return reader.readUTF();
     }
-    public Request readRequest() throws IOException, ClassNotFoundException {
-        return (Request) reader.readObject();
+    public Request<?> readRequest() throws IOException, ClassNotFoundException {
+        return (Request<?>) reader.readObject();
     }
     public void close() throws IOException {
         reader.close();

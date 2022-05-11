@@ -15,7 +15,7 @@ public class ResponseSenderModule {
         this.writer = new ObjectOutputStream(writer);
     }
 
-    public void sendResponse(Response response) throws IOException {
+    public void sendResponse(Response<?> response) throws IOException {
         writer.writeObject(response);
         writer.flush();
     }
