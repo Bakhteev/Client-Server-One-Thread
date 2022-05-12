@@ -1,4 +1,5 @@
 package managers;
+
 import comparators.PersonNameComparator;
 import models.Person;
 import validators.PersonValidator;
@@ -15,31 +16,25 @@ public class LinkedListCollectionManager {
     private final String type = this.collection.getClass().getSimpleName() + " of " + Person.class.getSimpleName();
 
     public void add(Person person) {
-        try {
-            if (checkUniqueId(person)) {
-                throw new SecurityException("Person id must be unique");
-            }
-            this.collection.add(person);
-            this.collection.sort(new PersonNameComparator());
-        } catch (SecurityException e) {
-            System.out.println(e.getMessage());
+        if (checkUniqueId(person)) {
+            throw new SecurityException("Person id must be unique");
         }
+        this.collection.add(person);
+        this.collection.sort(new PersonNameComparator());
     }
 
     public void addAll(Collection<Person> collection) {
         if (size() == 0) {
             this.collection.addAll(collection);
             Set<Integer> setOfId = new HashSet<>();
-            for (Person element : this.collection) {
-                setOfId.add(element.getId());
-            }
+            this.collection.forEach(person -> setOfId.add(person.getId()));
             for (Integer id : setOfId) {
                 try {
-                    int counter = 0;
-                    for (Person element : this.collection) {
-                        if (id.equals(element.getId()))
-                            counter++;
-                    }
+                    long counter = this.collection.stream().filter(person -> id.equals(person.getId())).count();
+//                    for (Person element : this.collection) {
+//                        if (id.equals(element.getId()))
+//                            counter++;
+//                    }
                     if (counter > 1) {
                         throw new SecurityException("Person id must be unique, objects with this id - " + id + " will be removed.\nNumber of " +
                                 "objects: " + counter);
@@ -66,11 +61,12 @@ public class LinkedListCollectionManager {
 
     public void loadCollection(Person[] collection) {
         try {
-            for (Person person : collection) {
-                PersonValidator.checkFields(person);
-            }
+            Arrays.stream(collection).forEach(PersonValidator::checkFields);
+//            for (Person person : collection) {
+//                PersonValidator.checkFields(person);
+//            }
             addAll(Arrays.asList(collection));
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
         initializationTime = LocalDateTime.now();

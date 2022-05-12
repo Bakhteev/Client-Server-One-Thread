@@ -44,22 +44,27 @@ public class Client {
             ObjectOutputStream writer = new ObjectOutputStream(socket.socket().getOutputStream());
             ObjectInputStream reader = new ObjectInputStream(socket.socket().getInputStream());
 
-            writer.writeObject(new Request<>("","",superArr));
-            writer.flush();
-            Response<Person[]> res = (Response<Person[]>) reader.readObject();
-            Person[] o = res.getBody();
-            System.out.println(Arrays.toString(o));
-            System.out.println(reader.readUTF());
+//            writer.writeObject(new Request<>("","",superArr));
+//            writer.flush();
+//            Response<Person[]> res = (Response<Person[]>) reader.readObject();
+//            Person[] o = res.getBody();
+//            System.out.println(Arrays.toString(o));
+//            System.out.println(reader.readUTF());
 
 //            socket.configureBlocking(false);
 
-            writer.writeUTF(new Scanner(System.in).nextLine());
-            writer.flush();
+//            writer.writeUTF(new Scanner(System.in).nextLine());
+            while (socket.isConnected()) {
+                System.out.println("Type a command:\n");
+                writer.writeObject(new Request<>(new Scanner(System.in).nextLine()));
+                writer.flush();
+                Response<?> res1 = (Response<?>) reader.readObject();
 
-            System.out.println(reader.readUTF());
+                System.out.println(res1.getStatus().equals(Response.Status.FAILURE) ? res1.getMessage() : res1.getBody());
+            }
 //            reader.close();
 //            writer.close();
-            socket.close();
+//            socket.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

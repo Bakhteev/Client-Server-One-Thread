@@ -1,7 +1,10 @@
 package managers;
 
 import commands.AbstractCommand;
+import commands.AddCommand;
 import exceptions.NoSuchCommandException;
+import interaction.Request;
+import interaction.Response;
 
 import java.io.Console;
 import java.util.ArrayDeque;
@@ -9,8 +12,7 @@ import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
-public class ConsoleClient {
-
+public class CommandManager{
     LinkedHashMap<String, AbstractCommand> commands = new LinkedHashMap<>();
     static public Console scanner = System.console();
     static public boolean fileMode = false;
@@ -18,6 +20,7 @@ public class ConsoleClient {
     private static Deque<Scanner> scanners = new ArrayDeque<>();
 
     public void addCommands(AbstractCommand[] commands) {
+
         for (AbstractCommand command : commands) {
             this.commands.put(command.getName(), command);
         }
@@ -27,18 +30,17 @@ public class ConsoleClient {
         return commands;
     }
 
-//    public boolean executeCommand(String command) {
-//        try {
-//            String[] userCommand = command.split(" ", 2);
-//            if (!commands.containsKey(userCommand[0])) {
-//                throw new NoSuchCommandException("No such command " + userCommand[0]);
-//            }
-//            return commands.get(userCommand[0]).execute(userCommand.length > 1 ? userCommand[1] : "");
-//        } catch (NoSuchCommandException e) {
-//            System.out.println(e.getMessage());
-//            return false;
-//        }
-//    }
+    public Response executeCommand(Request req) {
+        try {
+            if (!commands.containsKey(req.getCommand())) {
+                throw new NoSuchCommandException("No such command " + req.getCommand());
+            }
+            return commands.get(req.getCommand()).execute(req);
+        } catch (NoSuchCommandException e) {
+            System.out.println(e.getMessage() + " " + "Command manager");
+            return new Response<>(Response.Status.FAILURE, e.getMessage());
+        }
+    }
 
 //    public void startInteractiveMode() {
 //        while (true) {
@@ -53,7 +55,7 @@ public class ConsoleClient {
 //    }
 
     public static void setFileMode(boolean fileMode) {
-        ConsoleClient.fileMode = fileMode;
+        CommandManager.fileMode = fileMode;
     }
 
     static public void printLn(String argument) {

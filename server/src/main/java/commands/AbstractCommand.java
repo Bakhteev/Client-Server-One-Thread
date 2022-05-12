@@ -1,5 +1,8 @@
 package commands;
 
+import interaction.Request;
+import interaction.Response;
+
 public abstract class AbstractCommand {
     private String name;
     private String description;
@@ -23,6 +26,6 @@ public abstract class AbstractCommand {
         return params;
     }
 
-    abstract public String execute(String arguments);
+    abstract public Response execute(Request req);
 
 }

@@ -1,4 +1,9 @@
+import commands.AbstractCommand;
+import commands.HelpCommand;
+import commands.InfoCommand;
 import lombok.Getter;
+import managers.CommandManager;
+import modules.CommandWorkerModule;
 import modules.ConnectionModule;
 
 import java.io.IOException;
@@ -16,7 +21,6 @@ public class Server {
     private Executor executor;
     private ServerSocket server;
     private ExecutorService threadPool;
-
     public Server(int port) {
         this.port = port;
 //        this.connectionModule = new ConnectionModule(port);
@@ -34,14 +38,14 @@ public class Server {
         return true;
     }
 
-    public void connect(){
+    public void connect(CommandManager commandManager){
         while (connectionModule.getServerSocket() != null){
             try {
                 connectionModule.connect();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            threadPool.execute();
+            threadPool.execute(new CommandWorkerModule(connectionModule.getClientSocket(), commandManager));
         }
     }
 
