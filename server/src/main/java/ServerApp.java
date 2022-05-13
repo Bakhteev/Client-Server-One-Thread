@@ -27,17 +27,17 @@ public class ServerApp {
                 new ShowCommand(collectionManager.getCollection()),
 //                new AddCommand(collectionManager),
 //                new UpdateCommand(collectionManager),
-//                new RemoveByIdCommand(collectionManager),
+                new RemoveByIdCommand(collectionManager),
 //                new AddIfMinCommand(collectionManager),
 //                new SaveCommand(fileWorker, jsonParser, collectionManager),
 //                new ExitCommand(),
 //                new ExecuteScriptCommand(consoleClient),
-//                new ClearCommand(collectionManager),
+                new ClearCommand(collectionManager),
 //                new RemoveGreaterCommand(collectionManager),
-//                new PrintDescendingCommand(collectionManager.getCollection()),
-//                new PrintUniqueLocationCommand(collectionManager.getCollection()),
-//                new CountByHeightCommand(collectionManager.getCollection()),
-//                new RemoveFirstCommand(collectionManager),
+                new PrintDescendingCommand(collectionManager.getCollection()),
+                new PrintUniqueLocationCommand(collectionManager.getCollection()),
+                new CountByHeightCommand(collectionManager.getCollection()),
+                new RemoveFirstCommand(collectionManager),
         });
 
 

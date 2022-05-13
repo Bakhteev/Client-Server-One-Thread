@@ -22,27 +22,6 @@ public class CommandWorkerModule implements Runnable {
     public CommandWorkerModule(Socket clientSocket, CommandManager commandManager) {
         this.clientSocket = clientSocket;
         this.commandManager = commandManager;
-//        this.commandManager.addCommands(new AbstractCommand[]{
-//                new HelpCommand(commandManager),
-//                new InfoCommand(collectionManager),
-////                new ShowCommand(collectionManager.getCollection()),
-////                new AddCommand(collectionManager),
-////                new UpdateCommand(collectionManager),
-////                new RemoveByIdCommand(collectionManager),
-////                new AddIfMinCommand(collectionManager),
-////                new SaveCommand(fileWorker, jsonParser, collectionManager),
-////                new ExitCommand(),
-////                new ExecuteScriptCommand(consoleClient),
-////                new ClearCommand(collectionManager),
-////                new RemoveGreaterCommand(collectionManager),
-////                new PrintDescendingCommand(collectionManager.getCollection()),
-////                new PrintUniqueLocationCommand(collectionManager.getCollection()),
-////                new CountByHeightCommand(collectionManager.getCollection()),
-////                new RemoveFirstCommand(collectionManager),
-//        });
-//        this.executor = executor;
-//        new Setup().logger();
-//        logger = Logger.getLogger(Server.class.getName());
     }
 
     public void setup() {

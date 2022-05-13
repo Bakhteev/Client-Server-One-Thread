@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class ConsoleWorker {
+
     public static void println(String string){
         System.out.println(string);
     }
