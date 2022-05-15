@@ -16,19 +16,17 @@ public class HelpCommand extends AbstractCommand {
     @Override
     public Response execute(Request req) {
         try {
-//            if (!argument.isEmpty())
-//                throw new IllegalArgumentException("Using of command: " + getName());
+            if (req.getParams() != null) {
+                throw new IllegalArgumentException("Using of command: " + getName());
+            }
             StringBuilder sb = new StringBuilder();
             commandManager.getCommands().forEach((key, value) -> sb.append(key).append(": ").append(value.getDescription()).append(" ").append(
                     "Params: ").append(value.getParameters().isEmpty() ? "none" : value.getParameters()).append("\n"));
-
-            return new Response<>(Response.Status.COMPLETED,"",  sb.toString());
-//            return sb.toString();
+            return new Response<>(Response.Status.COMPLETED, "", String.valueOf(sb));
         } catch (IllegalArgumentException exception) {
             System.out.println("Использование: '" + getName() + "'");
-            return new Response<>(Response.Status.FAILURE,"Использование: '" + getName() + "'");
+            return new Response<>(Response.Status.FAILURE, "Использование: '" + getName() + "'");
         }
-//        return "true";
     }
 
 

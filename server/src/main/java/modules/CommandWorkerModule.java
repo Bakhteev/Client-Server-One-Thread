@@ -79,6 +79,7 @@ public class CommandWorkerModule implements Runnable {
             PersonDto dto = (PersonDto) reader.readObject();
             req.setBody(dto);
             writer.sendResponse(commandManager.executeCommand(req));
+            return;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -103,14 +104,14 @@ public class CommandWorkerModule implements Runnable {
                 writer.sendUTF("exit");
                 close();
                 return;
-            } else if (commandManager.getCommand(request.getCommand()) != null
-                    && commandManager.getCommand(request.getCommand()).getParameters().endsWith("{element}")) {
+            } else if (commandManager.getCommand(request.getCommand()).getParameters().endsWith("{element}")) {
                 requireDto(request);
-//                return;
+                return;
             } else {
                 writer.sendUTF("");
                 Response res = commandManager.executeCommand(request);
                 writer.sendResponse(res);
+                return;
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

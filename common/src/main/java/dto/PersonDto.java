@@ -34,4 +34,17 @@ public class PersonDto implements Serializable {
         this.hairsColor = hairsColor;
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "PersonDto{" +
+                "name='" + name + '\'' +
+                ", coordinates=" + coordinates +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", eyesColor=" + eyesColor +
+                ", hairsColor=" + hairsColor +
+                ", location=" + location +
+                '}';
+    }
 }

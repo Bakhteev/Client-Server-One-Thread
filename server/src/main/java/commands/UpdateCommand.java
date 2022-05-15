@@ -62,7 +62,9 @@ public class UpdateCommand extends AbstractCommand {
 //            Arrays.stream(params).forEach(param -> maker.setPersonByFields(personToUpdate, param.replace(">", "").trim()));
             collectionManager.update(personToUpdate, (PersonDto) req.getBody());
             System.out.println(personToUpdate);
-            return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(personToUpdate));
+            Response res = new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(personToUpdate));
+            System.out.println(res);
+            return res;
         } catch (NumberFormatException e) {
             System.out.println("Wrong id Format: " + req.getParams());
             return new Response<>(Response.Status.FAILURE, "Wrong id Format: " + req.getParams());

@@ -361,7 +361,7 @@ public class PersonMaker {
             Fields.showFieldList();
             ConsoleWorker.println("Choose param's names:");
             ConsoleWorker.printSymbol(false);
-            return console.next().trim().split(",");
+            return console.nextLine().trim().split("(,\\s)|(,)");
         }
     }
 
@@ -382,6 +382,7 @@ public class PersonMaker {
 
     public PersonDto update(){
         String[] params = askFields();
+        System.out.println(Arrays.toString(params));
         PersonDto dto = new PersonDto();
         Arrays.stream(params).forEach(param -> setPersonDtoByFields(dto, param));
         return dto;

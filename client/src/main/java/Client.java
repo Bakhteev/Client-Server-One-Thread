@@ -167,9 +167,6 @@ public class Client {
                 System.exit(0);
             }
             if (xui.equals("add")) {
-//                Console console = System.console();
-//                String suka =  console.readLine("dfdfdfdfdd");
-//                System.out.println(console);
                 PersonDto dto = new PersonMaker(sc).makeDto();
                 writer.sendObject(dto);
             }
@@ -186,6 +183,7 @@ public class Client {
         Response res;
         try {
             res = reader.readResponse();
+//            System.out.println(res.toString());
             System.out.println(res.toString());
         } catch (IOException | ClassNotFoundException e) {
             close();
