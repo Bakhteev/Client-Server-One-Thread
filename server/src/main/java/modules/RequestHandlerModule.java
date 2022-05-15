@@ -20,6 +20,10 @@ public class RequestHandlerModule {
     public Request<?> readRequest() throws IOException, ClassNotFoundException {
         return (Request<?>) reader.readObject();
     }
+
+    public Object readObject() throws IOException, ClassNotFoundException {
+        return reader.readObject();
+    }
     public void close() throws IOException {
         reader.close();
     }

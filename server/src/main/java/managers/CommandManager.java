@@ -30,6 +30,10 @@ public class CommandManager{
         return commands;
     }
 
+    public AbstractCommand getCommand(String name) {
+        return commands.get(name);
+    }
+
     public Response executeCommand(Request req) {
         try {
             if (!commands.containsKey(req.getCommand())) {

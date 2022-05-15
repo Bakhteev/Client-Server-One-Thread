@@ -1,6 +1,7 @@
 package interaction;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 public class Request<T> implements Serializable {
     String command;
     String params;
+    @Setter
     T body;
 
     public Request(String command){
@@ -28,4 +30,12 @@ public class Request<T> implements Serializable {
         this.body = body;
     }
 
+    @Override
+    public String toString() {
+        return "Request{" +
+                "command='" + command + '\'' +
+                ", params='" + params + '\'' +
+                ", body=" + body +
+                '}';
+    }
 }

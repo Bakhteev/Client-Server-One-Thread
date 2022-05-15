@@ -4,6 +4,7 @@ package modules;
 import commands.AbstractCommand;
 import commands.HelpCommand;
 import commands.InfoCommand;
+import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
 import managers.CommandManager;
@@ -57,10 +58,38 @@ public class CommandWorkerModule implements Runnable {
         }
     }
 
+    public void requireDto(Request req) {
+        AbstractCommand command = commandManager.getCommand(req.getCommand());
+        if (command == null) {
+            return;
+        }
+        if (req.getCommand().equals("update")) {
+            try {
+                writer.sendUTF("update");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            writer.sendUTF("add");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            PersonDto dto = (PersonDto) reader.readObject();
+            req.setBody(dto);
+            writer.sendResponse(commandManager.executeCommand(req));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void handleRequest() {
         Request request = null;
         try {
             request = reader.readRequest();
+            System.out.println(request.toString());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             close();
@@ -70,9 +99,21 @@ public class CommandWorkerModule implements Runnable {
         }
         try {
             assert request != null;
-            Response res = commandManager.executeCommand(request);
-            writer.sendResponse(res);
+            if (request.getCommand().equals("exit")) {
+                writer.sendUTF("exit");
+                close();
+                return;
+            } else if (commandManager.getCommand(request.getCommand()) != null
+                    && commandManager.getCommand(request.getCommand()).getParameters().endsWith("{element}")) {
+                requireDto(request);
+//                return;
+            } else {
+                writer.sendUTF("");
+                Response res = commandManager.executeCommand(request);
+                writer.sendResponse(res);
+            }
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }

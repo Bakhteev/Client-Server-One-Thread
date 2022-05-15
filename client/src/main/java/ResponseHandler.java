@@ -1,4 +1,5 @@
 import interaction.Request;
+import interaction.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +16,8 @@ public class ResponseHandler {
         return reader.readUTF();
     }
 
-    public Request<?> readRequest() throws IOException, ClassNotFoundException {
-        return (Request<?>) reader.readObject();
+    public Response<?> readResponse() throws IOException, ClassNotFoundException {
+        return (Response<?>) reader.readObject();
     }
 
     public void close() throws IOException {

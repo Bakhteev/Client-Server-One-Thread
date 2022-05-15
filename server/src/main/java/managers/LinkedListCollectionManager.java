@@ -1,6 +1,7 @@
 package managers;
 
 import comparators.PersonNameComparator;
+import dto.PersonDto;
 import models.Person;
 import validators.PersonValidator;
 
@@ -71,6 +72,15 @@ public class LinkedListCollectionManager {
         }
         initializationTime = LocalDateTime.now();
     }
+
+    public void update(Person person,PersonDto dto){
+        if(dto.getName() != null) person.setName(dto.getName());
+        if(dto.getCoordinates() != null) person.setCoordinates(dto.getCoordinates());
+        if(dto.getHeight() != null) person.setHeight(dto.getHeight());
+        if(dto.getWeight() != 0) person.setWeight(dto.getWeight());
+        if(dto.getHairsColor() != null) person.setHairsColor(dto.getHairsColor());
+        if(dto.getLocation() != null) person.setLocation(dto.getLocation());
+    };
 
     public int size() {
         return collection.size();

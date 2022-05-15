@@ -33,4 +33,13 @@ public class Response<T> implements Serializable {
         FAILURE,
         COMPLETED,
     }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", body=" + body +
+                '}';
+    }
 }

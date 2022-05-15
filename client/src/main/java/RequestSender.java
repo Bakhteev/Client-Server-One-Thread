@@ -1,3 +1,4 @@
+import interaction.Request;
 import interaction.Response;
 
 import java.io.IOException;
@@ -11,8 +12,13 @@ public class RequestSender {
         writer = new ObjectOutputStream(outputStream);
     }
 
-    public void sendResponse(Response<?> response) throws IOException {
-        writer.writeObject(response);
+    public void sendRequest(Request<?> request) throws IOException {
+        writer.writeObject(request);
+        writer.flush();
+    }
+
+    public void sendObject(Object object) throws IOException {
+        writer.writeObject(object);
         writer.flush();
     }
 

@@ -1,19 +1,28 @@
+import dto.PersonDto;
+import interaction.Request;
+import interaction.Response;
+
+import java.io.Console;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Client class */
+/**
+ * Client class
+ */
 public class Client {
     private final int port;
     private final String host;
-//    private Input in;
+    //    private Input in;
 //    private Output out;
     private Logger logger;
     private SocketChannel socket;
-//    private Creator creator;
+    //    private Creator creator;
     private RequestSender writer;
     private ResponseHandler reader;
 
@@ -38,10 +47,10 @@ public class Client {
      */
     public boolean connect() {
         try {
-
-            socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
+            socket = SocketChannel.open(new InetSocketAddress("127.0.0.1", port));
+            System.out.println("xui");
         } catch (IOException e) {
-            logger.severe("Ошибка подключения к серверу");
+//            logger.severe("Ошибка подключения к серверу");
             return false;
         }
 //        try {
@@ -79,7 +88,7 @@ public class Client {
         }
         try {
             reader.close();
-        } catch ( IOException e) {
+        } catch (IOException e) {
 //            logger.log(Level.SEVERE, "Ошибка закрытия потока ввода", e);
         }
         try {
@@ -93,14 +102,14 @@ public class Client {
         int sec = 0;
         while (!socket.isConnected()) {
             try {
-            socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
+                socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
 //                socket.connect(new InetSocketAddress(InetAddress.getByName(host), port));
                 setup();
 //                out.writeln();
 //                out.writeln("Повторное подключение проиведено успешно. Продолжение выполнения");
                 return;
             } catch (IOException e) {
-                logger.warning("Ошибка повторного подключения к серверу");
+//                logger.warning("Ошибка повторного подключения к серверу");
             }
 //            out.write("\rОшибка подключения. Ожидание повторного подключения: " + sec + "/60 секунд");
             sec++;
@@ -112,17 +121,17 @@ public class Client {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                logger.log(Level.SEVERE, "Ошибка приостановки выполнения потока", ex);
+//                logger.log(Level.SEVERE, "Ошибка приостановки выполнения потока", ex);
             }
         }
     }
 
     public void run() {
 //        try {
-            while (!getSocket().isConnected()) {
-//                get();
-                waitConnection();
-            }
+        while (getSocket().isConnected()) {
+            get();
+            waitConnection();
+        }
 //        }
 //        catch (OutputException e) {
 //            System.err.println("Ошибка записи");
@@ -131,65 +140,68 @@ public class Client {
 //        }
     }
 
-    /** One request */
-//    public void get() throws OutputException, InputException {
-//        try {
-//            out.write(receiver.readUTF());
-//        } catch (ReceiverException e) {
+    /**
+     * One request
+     */
+    public void get() {
+//        while (true) {
+        ConsoleWorker.println("Enter Command: ");
+        ConsoleWorker.printSymbol(true);
+        Scanner sc = new Scanner(System.in);
+        String[] scstr = sc.nextLine().trim().split(" ", 2);
+
+        System.out.println(Arrays.toString(scstr));
+        Request request = new Request(scstr[0], scstr.length > 1 ? scstr[1]: null);
+        try {
+            writer.sendRequest(request);
+        } catch (IOException e) {
+            close();
+            return;
+        }
+        try {
+//            System.out.println("ffffffff");
+            String xui = reader.readUTF();
+            System.out.println(xui);
+            if (xui.equals("exit")) {
+                close();
+                System.exit(0);
+            }
+            if (xui.equals("add")) {
+//                Console console = System.console();
+//                String suka =  console.readLine("dfdfdfdfdd");
+//                System.out.println(console);
+                PersonDto dto = new PersonMaker(sc).makeDto();
+                writer.sendObject(dto);
+            }
+            if (xui.equals("update")) {
+                PersonDto dto = new PersonMaker(sc).update();
+                writer.sendObject(dto);
+            }
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + "xuiiiiiiiii");
 //            close();
-//            return;
-//        }
-//        Request request = new Request(in.readLine());
-//        try {
-//            sender.writeObject(request);
-//        } catch (SenderException e) {
-//            close();
-//            return;
-//        }
-//        try {
-//            if (receiver.readBoolean()) { // exit
-//                close();
-//                System.exit(0);
-//            }
-//        } catch (ReceiverException e) {
-//            close();
-//            return;
-//        }
-//        try {
-//            if (receiver.readBoolean()) { // requireElement
-//                try {
-//                    sender.writeObject(creator.create());
-//                } catch (CreatorException e) {
-//                    logger.log(Level.SEVERE, "Ошибка создания нового элемента", e);
-//                    try {
-//                        sender.writeObject(null);
-//                    } catch (SenderException ex) {
-//                        logger.log(Level.SEVERE, "Ошибка отправки null", e);
-//                    }
-//                } catch (SenderException e) {
-//                    logger.log(Level.SEVERE, "Ошибка отправки нового элемента", e);
-//                }
-//            }
-//        } catch (ReceiverException e) {
-//            close();
-//            return;
-//        }
-//        Reply reply;
-//        try {
-//            reply = (Reply) receiver.readObject();
-//        } catch (ReceiverException e) {
-//            close();
-//            return;
-//        }
-//        if (reply != null) {
-//            reply.getReply().forEach(out::println);
-//        } else {
-//            logger.severe("Внутренняя ошибка сервера. Закрытие подключения");
-//            close();
-//            return;
-//        }
-//        logger.info(
-//                "Данные клиента: " + request.getCommandName() + " " + request.getCommandParameter());
-//        logger.log(reply.getType().getLevel(), reply.getString());
+            return;
+        }
+        Response res;
+        try {
+            res = reader.readResponse();
+            System.out.println(res.toString());
+        } catch (IOException | ClassNotFoundException e) {
+            close();
+            return;
+        }
+        if (res != null) {
+//                res.getReply().forEach(out::println);
+            System.out.println(res.getStatus().equals(Response.Status.FAILURE) ? res.getMessage() : res.getBody());
+        } else {
+//                logger.severe("Внутренняя ошибка сервера. Закрытие подключения");
+            close();
+            return;
+        }
+//            logger.info(
+//                    "Данные клиента: " + request.getCommandName() + " " + request.getCommandParameter());
+//            logger.log(reply.getType().getLevel(), reply.getString());
+    }
 //    }
 }
