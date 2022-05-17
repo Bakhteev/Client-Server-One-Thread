@@ -2,16 +2,12 @@ package modules;
 
 
 import commands.AbstractCommand;
-import commands.HelpCommand;
-import commands.InfoCommand;
 import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
 import managers.CommandManager;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class CommandWorkerModule implements Runnable {
@@ -69,21 +65,19 @@ public class CommandWorkerModule implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            writer.sendUTF("add");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            try {
+                writer.sendUTF("add");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         try {
             PersonDto dto = (PersonDto) reader.readObject();
             req.setBody(dto);
-            writer.sendResponse(commandManager.executeCommand(req));
-            return;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     private void handleRequest() {
@@ -97,22 +91,21 @@ public class CommandWorkerModule implements Runnable {
         }
         if (request == null) {
             close();
+            return;
         }
         try {
-            assert request != null;
+            AbstractCommand command = commandManager.getCommand(request.getCommand());
             if (request.getCommand().equals("exit")) {
                 writer.sendUTF("exit");
                 close();
                 return;
-            } else if (commandManager.getCommand(request.getCommand()).getParameters().endsWith("{element}")) {
+            } else if (command != null && command.getParameters().endsWith("{element}")) {
                 requireDto(request);
-                return;
             } else {
                 writer.sendUTF("");
-                Response res = commandManager.executeCommand(request);
-                writer.sendResponse(res);
-                return;
             }
+            Response<?> res = commandManager.executeCommand(request);
+            writer.sendResponse(res);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

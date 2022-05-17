@@ -1,15 +1,10 @@
 import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
-
-import java.io.Console;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,6 +20,7 @@ public class Client {
     //    private Creator creator;
     private RequestSender writer;
     private ResponseHandler reader;
+
 
     public Client(String host, int port) {
         this.port = port;
@@ -48,7 +44,6 @@ public class Client {
     public boolean connect() {
         try {
             socket = SocketChannel.open(new InetSocketAddress("127.0.0.1", port));
-            System.out.println("xui");
         } catch (IOException e) {
 //            logger.severe("Ошибка подключения к серверу");
             return false;
@@ -62,11 +57,7 @@ public class Client {
         return true;
     }
 
-    /**
-     * Setups connection
-     *
-     * @throws IOException if not setup
-     */
+
     public void setup() {
         try {
             writer = new RequestSender(socket.socket().getOutputStream());
@@ -100,18 +91,22 @@ public class Client {
 
     public void waitConnection() {
         int sec = 0;
-        while (!socket.isConnected()) {
+        while (socket.socket().isClosed() || !socket.socket().isConnected()) {
             try {
                 socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
 //                socket.connect(new InetSocketAddress(InetAddress.getByName(host), port));
                 setup();
+//                writer.setWriter(new ObjectOutputStream(socket.socket().getOutputStream()));
+//                reader.setReader(new ObjectInputStream(socket.socket().getInputStream()));
+
 //                out.writeln();
-//                out.writeln("Повторное подключение проиведено успешно. Продолжение выполнения");
+                System.out.println("Повторное подключение произведено успешно. Продолжение выполнения");
                 return;
             } catch (IOException e) {
 //                logger.warning("Ошибка повторного подключения к серверу");
             }
-//            out.write("\rОшибка подключения. Ожидание повторного подключения: " + sec + "/60 секунд");
+            System.out.println("\rОшибка подключения. Ожидание повторного подключения: " + sec + "/60 секунд");
+//            out.write();
             sec++;
             if (sec > 60) {
 //                out.writeln("Клиент не дождался подключения. Завершение работы программы");
@@ -140,60 +135,98 @@ public class Client {
 //        }
     }
 
+//    private Request request;
+
+    private void sendRequest(Request request) throws IOException {
+        try {
+            writer.sendRequest(request);
+            System.out.println(socket.socket().isClosed() + " || " + socket.isConnected());
+        } catch (IOException e) {
+//            waitConnection();
+//            sendRequest(request);
+        }
+
+    }
+
+
     /**
      * One request
      */
     public void get() {
 //        while (true) {
-        ConsoleWorker.println("Enter Command: ");
-        ConsoleWorker.printSymbol(true);
-        Scanner sc = new Scanner(System.in);
-        String[] scstr = sc.nextLine().trim().split(" ", 2);
-
-        System.out.println(Arrays.toString(scstr));
-        Request request = new Request(scstr[0], scstr.length > 1 ? scstr[1]: null);
+//        ConsoleWorker.println("Enter Command: ");
+//        ConsoleWorker.printSymbol(true);
+//        Scanner sc = new Scanner(System.in);
+//        String[] scstr = sc.nextLine().trim().split(" ", 2);
+//
+//        System.out.println(Arrays.toString(scstr));
+        CommandManager commandManager = new CommandManager();
+        Request request = commandManager.startInteractiveMode();
         try {
-            writer.sendRequest(request);
+            sendRequest(request);
         } catch (IOException e) {
-            close();
-            return;
+            e.printStackTrace();
         }
+//        try {
+//            writer.sendRequest(request);
+//        } catch (IOException e) {
+//            System.out.println("tyt");
+//            while (!getSocket().isConnected()) {
+//                waitConnection();
+//            }
+//            try {
+//                writer.sendRequest(request);
+//            } catch (IOException ioException) {
+//                ioException.printStackTrace();
+//            }
+////            try {
+////
+////            }catch (IOException ioException) {
+////                ioException.printStackTrace();
+////            }
+////            return;
+//        }
         try {
-//            System.out.println("ffffffff");
-            String xui = reader.readUTF();
-            System.out.println(xui);
-            if (xui.equals("exit")) {
+            String commandType = reader.readUTF();
+//            System.out.println(commandType);
+            if (commandType.equals("exit")) {
                 close();
                 System.exit(0);
             }
-            if (xui.equals("add")) {
-                PersonDto dto = new PersonMaker(sc).makeDto();
+            if (commandType.equals("add")) {
+                PersonDto dto;
+                if (CommandManager.fileMode) {
+                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
+                } else {
+                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
+                }
                 writer.sendObject(dto);
             }
-            if (xui.equals("update")) {
-                PersonDto dto = new PersonMaker(sc).update();
+            if (commandType.equals("update")) {
+                PersonDto dto;
+                if (CommandManager.fileMode) {
+                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
+                } else {
+                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
+                }
                 writer.sendObject(dto);
             }
 
         } catch (IOException e) {
-            System.out.println(e.getMessage() + "xuiiiiiiiii");
-//            close();
-            return;
-        }
-        Response res;
-        try {
-            res = reader.readResponse();
-//            System.out.println(res.toString());
-            System.out.println(res.toString());
-        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
             close();
             return;
         }
-        if (res != null) {
-//                res.getReply().forEach(out::println);
+        try {
+            Response<?> res = reader.readResponse();
             System.out.println(res.getStatus().equals(Response.Status.FAILURE) ? res.getMessage() : res.getBody());
-        } else {
-//                logger.severe("Внутренняя ошибка сервера. Закрытие подключения");
+            return;
+        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+            e.printStackTrace();
+            close();
+            return;
+        } catch (ClassNotFoundException e) {
             close();
             return;
         }

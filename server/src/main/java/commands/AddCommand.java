@@ -46,7 +46,7 @@ public class AddCommand extends AbstractCommand {
             System.out.println("Person has successfully added");
             return new Response<>(Response.Status.COMPLETED, "Person has successfully added", PersonFormatter.format(person));
         } catch (SecurityException e) {
-            return new Response<Person>(Response.Status.FAILURE, "Person id must be unique", null);
+            return new Response<>(Response.Status.FAILURE, "Person id must be unique");
         }
 //        return true;
     }

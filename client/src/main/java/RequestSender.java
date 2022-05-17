@@ -30,4 +30,8 @@ public class RequestSender {
     public void close() throws IOException {
         writer.close();
     }
+
+    public void setWriter(ObjectOutputStream writer) {
+        this.writer = writer;
+    }
 }

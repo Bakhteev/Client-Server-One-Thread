@@ -23,4 +23,8 @@ public class ResponseHandler {
     public void close() throws IOException {
         reader.close();
     }
+
+    public void setReader(ObjectInputStream reader) {
+        this.reader = reader;
+    }
 }

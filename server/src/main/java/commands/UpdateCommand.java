@@ -10,7 +10,8 @@ import utils.PersonFormatter;
 
 import java.util.Arrays;
 import java.util.Locale;
- //TODO: FIX ALL ADD LOGGER
+
+//TODO: FIX ALL ADD LOGGER
 public class UpdateCommand extends AbstractCommand {
     private LinkedListCollectionManager collectionManager;
 
@@ -38,8 +39,9 @@ public class UpdateCommand extends AbstractCommand {
     @Override
     public Response execute(Request req) {
         try {
-            if (req.getParams() == null)
+            if (req.getParams() == null) {
                 throw new IllegalArgumentException("Using of command :" + getName() + " " + getParameters());
+            }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return new Response<>(Response.Status.FAILURE, e.getMessage());
@@ -62,9 +64,7 @@ public class UpdateCommand extends AbstractCommand {
 //            Arrays.stream(params).forEach(param -> maker.setPersonByFields(personToUpdate, param.replace(">", "").trim()));
             collectionManager.update(personToUpdate, (PersonDto) req.getBody());
             System.out.println(personToUpdate);
-            Response res = new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(personToUpdate));
-            System.out.println(res);
-            return res;
+            return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(personToUpdate));
         } catch (NumberFormatException e) {
             System.out.println("Wrong id Format: " + req.getParams());
             return new Response<>(Response.Status.FAILURE, "Wrong id Format: " + req.getParams());

@@ -14,11 +14,15 @@ public class PersonMaker {
     private Scanner userScanner = null;
     private final PersonValidator validator = new PersonValidator();
     private Scanner console = null;
-    boolean fileMode = false;
+    boolean fileMode = CommandManager.fileMode;
 
     public PersonMaker(Scanner userScanner) {
         this.console = userScanner;
+        this.userScanner = userScanner;
     }
+//    public PersonMaker(Scanner userScanner) {
+//        this.console = userScanner;
+//    }
 
 //    public PersonMaker(Console console) {
 //        this.console = console;
@@ -356,7 +360,7 @@ public class PersonMaker {
         return new PersonDto(personName, coordinates, height, weight, eyesColor, hairsColor, location);
     }
 
-    private String[] askFields(){
+    private String[] askFields() {
         while (true) {
             Fields.showFieldList();
             ConsoleWorker.println("Choose param's names:");
@@ -380,7 +384,7 @@ public class PersonMaker {
         }
     }
 
-    public PersonDto update(){
+    public PersonDto update() {
         String[] params = askFields();
         System.out.println(Arrays.toString(params));
         PersonDto dto = new PersonDto();

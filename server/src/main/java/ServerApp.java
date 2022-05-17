@@ -28,7 +28,7 @@ public class ServerApp {
                 new AddCommand(collectionManager),
                 new UpdateCommand(collectionManager),
                 new RemoveByIdCommand(collectionManager),
-//                new AddIfMinCommand(collectionManager),
+                new AddIfMinCommand(collectionManager),
 //                new SaveCommand(fileWorker, jsonParser, collectionManager),
 //                new ExitCommand(),
 //                new ExecuteScriptCommand(consoleClient),
