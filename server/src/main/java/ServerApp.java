@@ -74,8 +74,8 @@ public class ServerApp {
 //            }
 //        }
 
-        Server server = new Server(6789);
+        Server server = new Server(6789, commandManager);
         server.start();
-        server.connect(commandManager);
+        server.connect();
     }
 }

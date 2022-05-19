@@ -18,7 +18,7 @@ public class ConnectionModule {
 
     public void connect() throws IOException {
         System.out.println("Waiting...");
-        assert serverSocket != null;
+//        assert serverSocket != null;
         clientSocket = serverSocket.accept();
     }
 

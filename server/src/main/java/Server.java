@@ -21,8 +21,11 @@ public class Server {
     private Executor executor;
     private ServerSocket server;
     private ExecutorService threadPool;
-    public Server(int port) {
+    private CommandManager commandManager;
+
+    public Server(int port, CommandManager commandManager) {
         this.port = port;
+        this.commandManager = commandManager;
 //        this.connectionModule = new ConnectionModule(port);
         this.threadPool = Executors.newFixedThreadPool(1);
     }
@@ -32,14 +35,13 @@ public class Server {
             this.connectionModule = new ConnectionModule(this.port);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
         System.out.println("Server started on PORT: " + port);
         return true;
     }
 
-    public void connect(CommandManager commandManager){
-        while (connectionModule.getServerSocket() != null){
+    public void connect() {
+        while (connectionModule.getServerSocket() != null) {
             try {
                 connectionModule.connect();
             } catch (IOException e) {

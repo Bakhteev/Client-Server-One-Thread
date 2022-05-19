@@ -18,9 +18,12 @@ public class CommandManager {
     private Deque<String> files = new ArrayDeque<>();
     private static Deque<Scanner> scanners = new ArrayDeque<>();
 
+    private Scanner sc = new Scanner(System.in);
     public Deque<Scanner> getScanners() {
         return scanners;
     }
+
+
 
     public Request startInteractiveMode() {
 //            try {
@@ -30,14 +33,12 @@ public class CommandManager {
 //            } catch (NullPointerException e) {
 //                startInteractiveMode();
 //            }
-        String[] scstr = new String[0];
+        String[] scstr;
         ConsoleWorker.println("Enter Command: ");
         ConsoleWorker.printSymbol(true);
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
         scstr = sc.nextLine().trim().split(" ", 2);
-
         return executeCommand(scstr);
-
     }
 
     public static void setFileMode(boolean fileMode) {

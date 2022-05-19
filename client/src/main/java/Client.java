@@ -1,6 +1,7 @@
 import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -91,18 +92,15 @@ public class Client {
 
     public void waitConnection() {
         int sec = 0;
-        while (socket.socket().isClosed() || !socket.socket().isConnected()) {
+        close();
+        while (!socket.socket().isConnected()) {
             try {
                 socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
-//                socket.connect(new InetSocketAddress(InetAddress.getByName(host), port));
                 setup();
-//                writer.setWriter(new ObjectOutputStream(socket.socket().getOutputStream()));
-//                reader.setReader(new ObjectInputStream(socket.socket().getInputStream()));
-
-//                out.writeln();
                 System.out.println("Повторное подключение произведено успешно. Продолжение выполнения");
                 return;
             } catch (IOException e) {
+//                e.printStackTrace();
 //                logger.warning("Ошибка повторного подключения к серверу");
             }
             System.out.println("\rОшибка подключения. Ожидание повторного подключения: " + sec + "/60 секунд");
@@ -123,9 +121,9 @@ public class Client {
 
     public void run() {
 //        try {
-        while (getSocket().isConnected()) {
+        while (!getSocket().socket().isOutputShutdown()) {
             get();
-            waitConnection();
+//            waitConnection();
         }
 //        }
 //        catch (OutputException e) {
@@ -142,8 +140,8 @@ public class Client {
             writer.sendRequest(request);
             System.out.println(socket.socket().isClosed() + " || " + socket.isConnected());
         } catch (IOException e) {
-//            waitConnection();
-//            sendRequest(request);
+            waitConnection();
+            sendRequest(request);
         }
 
     }
@@ -162,30 +160,13 @@ public class Client {
 //        System.out.println(Arrays.toString(scstr));
         CommandManager commandManager = new CommandManager();
         Request request = commandManager.startInteractiveMode();
+
         try {
             sendRequest(request);
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try {
-//            writer.sendRequest(request);
-//        } catch (IOException e) {
-//            System.out.println("tyt");
-//            while (!getSocket().isConnected()) {
-//                waitConnection();
-//            }
-//            try {
-//                writer.sendRequest(request);
-//            } catch (IOException ioException) {
-//                ioException.printStackTrace();
-//            }
-////            try {
-////
-////            }catch (IOException ioException) {
-////                ioException.printStackTrace();
-////            }
-////            return;
-//        }
+
         try {
             String commandType = reader.readUTF();
 //            System.out.println(commandType);
@@ -194,21 +175,21 @@ public class Client {
                 System.exit(0);
             }
             if (commandType.equals("add")) {
-                PersonDto dto;
-                if (CommandManager.fileMode) {
-                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
-                } else {
-                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
-                }
+                PersonDto dto = new PersonMaker(commandManager.getSc()).makeDto();
+//                if (CommandManager.fileMode) {
+//                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
+//                } else {
+//                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
+//                }
                 writer.sendObject(dto);
             }
             if (commandType.equals("update")) {
-                PersonDto dto;
-                if (CommandManager.fileMode) {
-                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
-                } else {
-                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
-                }
+                PersonDto dto = new PersonMaker(commandManager.getSc()).update();
+//                if (CommandManager.fileMode) {
+//                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
+//                } else {
+//                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
+//                }
                 writer.sendObject(dto);
             }
 
