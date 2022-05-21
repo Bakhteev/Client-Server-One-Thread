@@ -3,23 +3,18 @@ package commands;
 import communicate.RequestSender;
 import communicate.ResponseHandler;
 import interaction.Request;
-import interaction.Response;
 import workers.ConsoleWorker;
 
 import java.io.IOException;
 
-public class HelpCommand extends AbstractCommand {
-
-//    ClientCommandManager commandManager;
-
+public class ShowCommand extends AbstractCommand {
     RequestSender writer;
     ResponseHandler reader;
 
-    public HelpCommand(RequestSender writer, ResponseHandler reader) {
-        super("help", "display help on available commands.", "");
+    public ShowCommand(RequestSender writer, ResponseHandler reader) {
+        super("show", "print to standard output all elements of the collection in string representation.", "");
         this.writer = writer;
         this.reader = reader;
-//        this.commandManager = commandManager;
     }
 
     @Override
@@ -35,7 +30,6 @@ public class HelpCommand extends AbstractCommand {
         try {
             writer.sendRequest(new Request<>(getName()));
         } catch (IOException e) {
-
             e.printStackTrace();
         }
         return result(reader);

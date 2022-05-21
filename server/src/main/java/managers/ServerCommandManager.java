@@ -12,12 +12,12 @@ import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
-public class CommandManager{
+public class ServerCommandManager {
     LinkedHashMap<String, AbstractCommand> commands = new LinkedHashMap<>();
-    static public Console scanner = System.console();
+//    static public Console scanner = System.console();
     static public boolean fileMode = false;
-    private Deque<String> files = new ArrayDeque<>();
-    private static Deque<Scanner> scanners = new ArrayDeque<>();
+//    private Deque<String> files = new ArrayDeque<>();
+//    private static Deque<Scanner> scanners = new ArrayDeque<>();
 
     public void addCommands(AbstractCommand[] commands) {
 
@@ -59,7 +59,7 @@ public class CommandManager{
 //    }
 
     public static void setFileMode(boolean fileMode) {
-        CommandManager.fileMode = fileMode;
+        ServerCommandManager.fileMode = fileMode;
     }
 
     static public void printLn(String argument) {
@@ -70,11 +70,11 @@ public class CommandManager{
         System.out.println("> " + argument);
     }
 
-    public Deque<String> getFiles() {
-        return files;
-    }
-
-    public static Deque<Scanner> getScanners() {
-        return scanners;
-    }
+//    public Deque<String> getFiles() {
+//        return files;
+//    }
+//
+//    public static Deque<Scanner> getScanners() {
+//        return scanners;
+//    }
 }

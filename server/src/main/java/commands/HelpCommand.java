@@ -2,13 +2,13 @@ package commands;
 
 import interaction.Request;
 import interaction.Response;
-import managers.CommandManager;
+import managers.ServerCommandManager;
 //TODO: ADD LOGGER, DO SMT WITH CONSOLECLIENT
 
 public class HelpCommand extends AbstractCommand {
-    CommandManager commandManager;
+    ServerCommandManager commandManager;
 
-    public HelpCommand(CommandManager commandManager) {
+    public HelpCommand(ServerCommandManager commandManager) {
         super("help", "display help on available commands.", "");
         this.commandManager = commandManager;
     }

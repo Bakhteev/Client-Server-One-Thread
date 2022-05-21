@@ -3,23 +3,18 @@ package commands;
 import communicate.RequestSender;
 import communicate.ResponseHandler;
 import interaction.Request;
-import interaction.Response;
 import workers.ConsoleWorker;
 
 import java.io.IOException;
 
-public class HelpCommand extends AbstractCommand {
-
-//    ClientCommandManager commandManager;
-
+public class PrintUniqueLocationCommand extends AbstractCommand {
     RequestSender writer;
     ResponseHandler reader;
 
-    public HelpCommand(RequestSender writer, ResponseHandler reader) {
-        super("help", "display help on available commands.", "");
+    public PrintUniqueLocationCommand(RequestSender writer, ResponseHandler reader) {
+        super("print_unique_location", "display the unique values of the location field of all elements in the collection.", "");
         this.writer = writer;
         this.reader = reader;
-//        this.commandManager = commandManager;
     }
 
     @Override
@@ -33,9 +28,8 @@ public class HelpCommand extends AbstractCommand {
             return false;
         }
         try {
-            writer.sendRequest(new Request<>(getName()));
+            writer.sendRequest(new Request(getName()));
         } catch (IOException e) {
-
             e.printStackTrace();
         }
         return result(reader);

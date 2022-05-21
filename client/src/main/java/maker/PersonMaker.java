@@ -1,10 +1,11 @@
-
+package maker;
 
 import dto.PersonDto;
+import managers.ClientCommandManager;
 import models.*;
 import validators.PersonValidator;
+import workers.ConsoleWorker;
 
-import java.io.Console;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
@@ -14,17 +15,17 @@ public class PersonMaker {
     private Scanner userScanner = null;
     private final PersonValidator validator = new PersonValidator();
     private Scanner console = null;
-    boolean fileMode = CommandManager.fileMode;
+    boolean fileMode = ClientCommandManager.fileMode;
 
     public PersonMaker(Scanner userScanner) {
         this.console = userScanner;
         this.userScanner = userScanner;
     }
-//    public PersonMaker(Scanner userScanner) {
+//    public maker.PersonMaker(Scanner userScanner) {
 //        this.console = userScanner;
 //    }
 
-//    public PersonMaker(Console console) {
+//    public maker.PersonMaker(Console console) {
 //        this.console = console;
 //        System.out.println(console.toString());
 //    }

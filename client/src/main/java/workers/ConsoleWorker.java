@@ -1,3 +1,5 @@
+package workers;
+
 import java.util.Scanner;
 
 public class ConsoleWorker {
@@ -21,4 +23,9 @@ public class ConsoleWorker {
     public static String readWord(Scanner scanner){
         return scanner.next().replace("> ", "");
     }
+
+    public static void printError(String string){
+        System.out.println("\u001B[31m" + string + "\u001B[0m");
+    }
 }
+

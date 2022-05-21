@@ -1,31 +1,43 @@
+package managers;
+
+import commands.AbstractCommand;
 import interaction.Request;
 import interaction.Response;
 import lombok.Getter;
+import managers.exceptions.NoSuchCommandException;
 import utils.exceptions.NoReadableFileException;
+import workers.ConsoleWorker;
 
 import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter
-public class CommandManager {
+public class ClientCommandManager {
+    LinkedHashMap<String, AbstractCommand> commands = new LinkedHashMap<>();
     static public Console scanner = System.console();
     static public boolean fileMode = false;
     private Deque<String> files = new ArrayDeque<>();
     private static Deque<Scanner> scanners = new ArrayDeque<>();
 
     private Scanner sc = new Scanner(System.in);
+
+
+
     public Deque<Scanner> getScanners() {
         return scanners;
     }
 
 
+    public void addCommands(AbstractCommand[] commands) {
+        for (AbstractCommand command : commands) {
+            this.commands.put(command.getName(), command);
+        }
+    }
 
-    public Request startInteractiveMode() {
+
+    public void startInteractiveMode() {
 //            try {
 //                Console console = System.console();
 //                String command = console.readLine("\nEnter the command\n$ ").trim();
@@ -33,30 +45,32 @@ public class CommandManager {
 //            } catch (NullPointerException e) {
 //                startInteractiveMode();
 //            }
-        String[] scstr;
-        ConsoleWorker.println("Enter Command: ");
-        ConsoleWorker.printSymbol(true);
+        while (true) {
+            String scstr;
+            ConsoleWorker.println("Enter Command: ");
+            ConsoleWorker.printSymbol(true);
 //        Scanner sc = new Scanner(System.in);
-        scstr = sc.nextLine().trim().split(" ", 2);
-        return executeCommand(scstr);
+            scstr = sc.nextLine().trim();
+            executeCommand(scstr);
+        }
     }
 
     public static void setFileMode(boolean fileMode) {
-        CommandManager.fileMode = fileMode;
+        ClientCommandManager.fileMode = fileMode;
     }
 
-    public Request executeCommand(String[] command) {
-        return new Request<>(command[0], command.length > 1 ? command[1] : null);
-
-//        try {
-////            if (!commands.containsKey(req.getCommand())) {
-////                throw new NoSuchCommandException("No such command " + req.getCommand());
-////            }
-//            commands.get(req.getCommand()).execute(req);
-//        } catch (NoSuchCommandException e) {
-//            System.out.println(e.getMessage() + " " + "Command manager");
-//            return new Response<>(Response.Status.FAILURE, e.getMessage());
-//        }
+    public boolean executeCommand(String command) {
+        try {
+        String[] userCommand = command.split(" ", 2);
+            if (!commands.containsKey(userCommand[0])) {
+                throw new NoSuchCommandException("No such command: " + userCommand[0]);
+            }
+        return commands.get(userCommand[0]).execute(userCommand.length > 1 ? userCommand[1] : "");
+        }
+        catch (NoSuchCommandException e) {
+            ConsoleWorker.printError(e.getMessage());
+            return false;
+        }
     }
 
     public boolean executeScript(String argument) {
@@ -90,7 +104,7 @@ public class CommandManager {
         while (scanners.getLast().hasNextLine()) {
             String command = scanners.getLast().nextLine();
             if (command.startsWith("$")) {
-                executeCommand(command.replace("$ ", "").split(" "));
+                executeCommand(command.replace("$ ", ""));
             }
         }
         System.out.println("\nExecuting of " + files.getLast() + " has successfully finished\n");

@@ -2,24 +2,25 @@ package commands;
 
 import communicate.RequestSender;
 import communicate.ResponseHandler;
+import dto.PersonDto;
 import interaction.Request;
-import interaction.Response;
+import maker.PersonMaker;
+import managers.ClientCommandManager;
 import workers.ConsoleWorker;
 
 import java.io.IOException;
 
-public class HelpCommand extends AbstractCommand {
-
-//    ClientCommandManager commandManager;
-
+public class RemoveGreaterCommand extends AbstractCommand {
     RequestSender writer;
     ResponseHandler reader;
+    ClientCommandManager commandManager;
 
-    public HelpCommand(RequestSender writer, ResponseHandler reader) {
-        super("help", "display help on available commands.", "");
+    public RemoveGreaterCommand(RequestSender writer, ResponseHandler reader, ClientCommandManager commandManager) {
+        super("remove_greater", "remove from the collection all elements greater than the given.",
+                "{element}");
         this.writer = writer;
         this.reader = reader;
-//        this.commandManager = commandManager;
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -32,10 +33,10 @@ public class HelpCommand extends AbstractCommand {
             ConsoleWorker.printError(e.getMessage());
             return false;
         }
+        PersonDto dto = new PersonMaker(ClientCommandManager.fileMode ? commandManager.getScanners().getLast() : commandManager.getSc()).makeDto();
         try {
-            writer.sendRequest(new Request<>(getName()));
+            writer.sendRequest(new Request<>(getName(), "", dto));
         } catch (IOException e) {
-
             e.printStackTrace();
         }
         return result(reader);

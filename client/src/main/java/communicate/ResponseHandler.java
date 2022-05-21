@@ -1,3 +1,5 @@
+package communicate;
+
 import interaction.Request;
 import interaction.Response;
 
@@ -24,7 +26,7 @@ public class ResponseHandler {
         reader.close();
     }
 
-    public void setReader(ObjectInputStream reader) {
-        this.reader = reader;
+    public void setReader(InputStream inputStream) throws IOException {
+        this.reader = new ObjectInputStream(inputStream);
     }
 }

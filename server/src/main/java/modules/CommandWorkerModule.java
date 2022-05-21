@@ -5,7 +5,7 @@ import commands.AbstractCommand;
 import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
-import managers.CommandManager;
+import managers.ServerCommandManager;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -14,9 +14,9 @@ public class CommandWorkerModule implements Runnable {
     private RequestHandlerModule reader;
     private ResponseSenderModule writer;
     private Socket clientSocket;
-    private CommandManager commandManager;
+    private ServerCommandManager commandManager;
 
-    public CommandWorkerModule(Socket clientSocket, CommandManager commandManager) {
+    public CommandWorkerModule(Socket clientSocket, ServerCommandManager commandManager) {
         this.clientSocket = clientSocket;
         this.commandManager = commandManager;
     }
@@ -94,16 +94,17 @@ public class CommandWorkerModule implements Runnable {
             return;
         }
         try {
-            AbstractCommand command = commandManager.getCommand(request.getCommand());
-            if (request.getCommand().equals("exit")) {
-                writer.sendUTF("exit");
-                close();
-                return;
-            } else if (command != null && command.getParameters().endsWith("{element}")) {
-                requireDto(request);
-            } else {
-                writer.sendUTF("");
-            }
+//            AbstractCommand command = commandManager.getCommand(request.getCommand());
+//            if (request.getCommand().equals("exit")) {
+//                writer.sendUTF("exit");
+//                close();
+//                return;
+//            } else if (command != null && command.getParameters().endsWith("{element}")) {
+//                requireDto(request);
+//            } else {
+//                writer.sendUTF("");
+//            }
+
             Response<?> res = commandManager.executeCommand(request);
             writer.sendResponse(res);
         } catch (IOException e) {

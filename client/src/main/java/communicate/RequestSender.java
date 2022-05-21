@@ -1,7 +1,10 @@
+package communicate;
+
+import client.Client;
 import interaction.Request;
-import interaction.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
@@ -13,8 +16,14 @@ public class RequestSender {
     }
 
     public void sendRequest(Request<?> request) throws IOException {
-        writer.writeObject(request);
-        writer.flush();
+        try {
+            writer.writeObject(request);
+            writer.flush();
+        }
+        catch (IOException e){
+            Client.waitConnection();
+            sendRequest(request);
+        }
     }
 
     public void sendObject(Object object) throws IOException {
@@ -31,7 +40,7 @@ public class RequestSender {
         writer.close();
     }
 
-    public void setWriter(ObjectOutputStream writer) {
-        this.writer = writer;
+    public void setWriter(OutputStream outputStream) throws IOException {
+        this.writer = new ObjectOutputStream(outputStream);
     }
 }

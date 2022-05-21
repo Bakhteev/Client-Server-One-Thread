@@ -1,8 +1,8 @@
 import commands.*;
 import interaction.Request;
 import interaction.Response;
-import managers.CommandManager;
 import managers.LinkedListCollectionManager;
+import managers.ServerCommandManager;
 import models.Person;
 import modules.ConnectionModule;
 import modules.RequestHandlerModule;
@@ -20,7 +20,7 @@ public class ServerApp {
         LinkedListCollectionManager collectionManager = new LinkedListCollectionManager();
         collectionManager.loadCollection((jsonParser.JSONParse(fileWorker.readFile(), Person[].class)));
 
-        CommandManager commandManager = new CommandManager();
+        ServerCommandManager commandManager = new ServerCommandManager();
         commandManager.addCommands(new AbstractCommand[]{
                 new HelpCommand(commandManager),
                 new InfoCommand(collectionManager),

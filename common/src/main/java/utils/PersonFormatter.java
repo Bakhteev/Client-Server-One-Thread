@@ -1,15 +1,13 @@
 package utils;
 
-
 import models.Person;
-
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 
 public class PersonFormatter {
 
     public static String format(Person person) {
-        return "\nID: " + person.getId() + "\n" +
+        return "\n\nID: " + person.getId() + "\n" +
                 "Name: " + person.getName() + "\n" +
                 "Creation date: " + person.getCreationDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\n" +
                 "Coordinates: " + "\n" +
@@ -23,7 +21,7 @@ public class PersonFormatter {
                 "   x: " + person.getLocation().getX() + "\n" +
                 "   y: " + person.getLocation().getY() + "\n" +
                 "   Z: " + person.getLocation().getZ() + "\n" +
-                "   Location name: " + person.getLocation().getName() + "\n";
+                "   Location name: " + person.getLocation().getName();
     }
 
     public static String formatCollection(LinkedList<Person> collection) {

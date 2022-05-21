@@ -8,18 +8,14 @@ import workers.ConsoleWorker;
 
 import java.io.IOException;
 
-public class HelpCommand extends AbstractCommand {
-
-//    ClientCommandManager commandManager;
-
+public class PrintDescendingCommand extends AbstractCommand {
     RequestSender writer;
     ResponseHandler reader;
 
-    public HelpCommand(RequestSender writer, ResponseHandler reader) {
-        super("help", "display help on available commands.", "");
+    public PrintDescendingCommand(RequestSender writer, ResponseHandler reader) {
+        super("print_descending", "display the elements of the collection in descending order.", "");
         this.writer = writer;
         this.reader = reader;
-//        this.commandManager = commandManager;
     }
 
     @Override
@@ -35,8 +31,8 @@ public class HelpCommand extends AbstractCommand {
         try {
             writer.sendRequest(new Request<>(getName()));
         } catch (IOException e) {
-
             e.printStackTrace();
+            return false;
         }
         return result(reader);
     }

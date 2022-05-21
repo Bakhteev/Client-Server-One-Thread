@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
+import client.Client;
 import interaction.Request;
 import interaction.Response;
 import models.*;

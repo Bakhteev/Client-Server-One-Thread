@@ -1,6 +1,12 @@
+package client;
+
+import commands.*;
+import communicate.RequestSender;
+import communicate.ResponseHandler;
 import dto.PersonDto;
 import interaction.Request;
 import interaction.Response;
+import managers.ClientCommandManager;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,15 +18,15 @@ import java.util.logging.Logger;
  * Client class
  */
 public class Client {
-    private final int port;
-    private final String host;
+    private static int port;
+    private static String host;
     //    private Input in;
 //    private Output out;
     private Logger logger;
-    private SocketChannel socket;
+    private static SocketChannel socket;
     //    private Creator creator;
-    private RequestSender writer;
-    private ResponseHandler reader;
+    private static RequestSender writer;
+    private static ResponseHandler reader;
 
 
     public Client(String host, int port) {
@@ -37,11 +43,6 @@ public class Client {
         return socket;
     }
 
-    /**
-     * Connects to the server
-     *
-     * @return True if connected
-     */
     public boolean connect() {
         try {
             socket = SocketChannel.open(new InetSocketAddress("127.0.0.1", port));
@@ -59,7 +60,7 @@ public class Client {
     }
 
 
-    public void setup() {
+    public static void setup() {
         try {
             writer = new RequestSender(socket.socket().getOutputStream());
         } catch (IOException e) {
@@ -72,7 +73,7 @@ public class Client {
         }
     }
 
-    public void close() {
+    public static void close() {
         try {
             writer.close();
         } catch (IOException e) {
@@ -90,13 +91,15 @@ public class Client {
         }
     }
 
-    public void waitConnection() {
+    public static void waitConnection() {
         int sec = 0;
         close();
         while (!socket.socket().isConnected()) {
             try {
                 socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
-                setup();
+                reader.setReader(socket.socket().getInputStream());
+                writer.setWriter(socket.socket().getOutputStream());
+//                setup();
                 System.out.println("Повторное подключение произведено успешно. Продолжение выполнения");
                 return;
             } catch (IOException e) {
@@ -158,62 +161,76 @@ public class Client {
 //        String[] scstr = sc.nextLine().trim().split(" ", 2);
 //
 //        System.out.println(Arrays.toString(scstr));
-        CommandManager commandManager = new CommandManager();
-        Request request = commandManager.startInteractiveMode();
+        ClientCommandManager commandManager = new ClientCommandManager();
+        commandManager.addCommands(new AbstractCommand[]{
+                new HelpCommand(writer, reader),
+                new InfoCommand(writer, reader),
+                new CountByHeightCommand(writer, reader),
+                new PrintDescendingCommand(writer, reader),
+                new AddCommand(writer, reader, commandManager),
+                new UpdateCommand(writer, reader, commandManager),
+                new ShowCommand(writer, reader),
+                new ClearCommand(writer, reader),
+                new RemoveGreaterCommand(writer, reader, commandManager),
+                new RemoveFirstCommand(writer, reader),
+                new RemoveByIdCommand(writer, reader),
+                new PrintUniqueLocationCommand(writer, reader)});
+        commandManager.startInteractiveMode();
 
-        try {
-            sendRequest(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            sendRequest(request);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        try {
-            String commandType = reader.readUTF();
-//            System.out.println(commandType);
-            if (commandType.equals("exit")) {
-                close();
-                System.exit(0);
-            }
-            if (commandType.equals("add")) {
-                PersonDto dto = new PersonMaker(commandManager.getSc()).makeDto();
-//                if (CommandManager.fileMode) {
-//                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
-//                } else {
-//                    dto = new PersonMaker(commandManager.getScanners().getLast()).makeDto();
-//                }
-                writer.sendObject(dto);
-            }
-            if (commandType.equals("update")) {
-                PersonDto dto = new PersonMaker(commandManager.getSc()).update();
-//                if (CommandManager.fileMode) {
-//                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
-//                } else {
-//                    dto = new PersonMaker(commandManager.getScanners().getLast()).update();
-//                }
-                writer.sendObject(dto);
-            }
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            close();
-            return;
-        }
-        try {
-            Response<?> res = reader.readResponse();
-            System.out.println(res.getStatus().equals(Response.Status.FAILURE) ? res.getMessage() : res.getBody());
-            return;
-        } catch (IOException e) {
+//        try {
+//            String commandType = reader.readUTF();
+////            System.out.println(commandType);
+//            if (commandType.equals("exit")) {
+//                close();
+//                System.exit(0);
+//            }
+//            if (commandType.equals("add")) {
+//                PersonDto dto = new maker.PersonMaker(commandManager.getSc()).makeDto();
+////                if (CommandManager.fileMode) {
+////                    dto = new maker.PersonMaker(commandManager.getScanners().getLast()).makeDto();
+////                } else {
+////                    dto = new maker.PersonMaker(commandManager.getScanners().getLast()).makeDto();
+////                }
+//                writer.sendObject(dto);
+//            }
+//            if (commandType.equals("update")) {
+//                PersonDto dto = new maker.PersonMaker(commandManager.getSc()).update();
+////                if (CommandManager.fileMode) {
+////                    dto = new maker.PersonMaker(commandManager.getScanners().getLast()).update();
+////                } else {
+////                    dto = new maker.PersonMaker(commandManager.getScanners().getLast()).update();
+////                }
+//                writer.sendObject(dto);
+//            }
+//
+//        } catch (IOException e) {
 //            System.out.println(e.getMessage());
-            e.printStackTrace();
-            close();
-            return;
-        } catch (ClassNotFoundException e) {
-            close();
-            return;
-        }
+//            close();
+//            return;
+//        }
+//        try {
+//            Response<?> res = reader.readResponse();
+//            System.out.println(res.getStatus().equals(Response.Status.FAILURE) ? res.getMessage() : res.getBody());
+//            return;
+//        } catch (IOException e) {
+////            System.out.println(e.getMessage());
+//            e.printStackTrace();
+//            close();
+//            return;
+//        } catch (ClassNotFoundException e) {
+//            close();
+//            return;
+//        }
 //            logger.info(
 //                    "Данные клиента: " + request.getCommandName() + " " + request.getCommandParameter());
 //            logger.log(reply.getType().getLevel(), reply.getString());
     }
 //    }
 }
+

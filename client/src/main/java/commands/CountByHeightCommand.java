@@ -8,36 +8,35 @@ import workers.ConsoleWorker;
 
 import java.io.IOException;
 
-public class HelpCommand extends AbstractCommand {
-
-//    ClientCommandManager commandManager;
+public class CountByHeightCommand extends AbstractCommand {
 
     RequestSender writer;
     ResponseHandler reader;
 
-    public HelpCommand(RequestSender writer, ResponseHandler reader) {
-        super("help", "display help on available commands.", "");
+    public CountByHeightCommand(RequestSender writer, ResponseHandler reader) {
+        super("count_by_height", "display the number of elements whose height field value is equal to the given one.",
+                "height");
         this.writer = writer;
         this.reader = reader;
-//        this.commandManager = commandManager;
     }
+
 
     @Override
     public boolean execute(String argument) {
         try {
-            if (!argument.isEmpty()) {
-                throw new IllegalArgumentException("Using of command: " + getName());
+            if (argument.isEmpty()) {
+                throw new IllegalArgumentException("Using of command: " + getName() + " " + getParameters());
             }
         } catch (IllegalArgumentException e) {
             ConsoleWorker.printError(e.getMessage());
             return false;
         }
         try {
-            writer.sendRequest(new Request<>(getName()));
+            writer.sendRequest(new Request<>(getName(), argument));
         } catch (IOException e) {
-
             e.printStackTrace();
         }
+
         return result(reader);
     }
 }

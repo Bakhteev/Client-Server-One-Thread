@@ -18,17 +18,6 @@ public class AddCommand extends AbstractCommand {
 
     @Override
     public Response execute(Request req) {
-//        try {
-////            if (!argument.isEmpty())
-////                throw new IllegalArgumentException("Using of command add: " + getName());
-//
-//        } catch (IllegalArgumentException e) {
-//            System.out.println(e.getMessage());
-//            return false;
-//        }
-//        if (ConsoleClient.fileMode)
-//            maker = new PersonMaker(ConsoleClient.getScanners().getLast());
-//        else
         PersonDto dto = (PersonDto) req.getBody();
         PersonValidator.checkDtoFields(dto);
         Person person = new Person(
@@ -40,14 +29,12 @@ public class AddCommand extends AbstractCommand {
                 dto.getHairsColor(),
                 dto.getLocation()
         );
-//            maker = new PersonMaker(ConsoleClient.scanner);
         try {
             collectionManager.add(person);
             System.out.println("Person has successfully added");
-            return new Response<>(Response.Status.COMPLETED, "Person has successfully added", PersonFormatter.format(person));
+            return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(person) + "Person has successfully added");
         } catch (SecurityException e) {
             return new Response<>(Response.Status.FAILURE, "Person id must be unique");
         }
-//        return true;
     }
 }

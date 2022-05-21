@@ -2,7 +2,7 @@ import commands.AbstractCommand;
 import commands.HelpCommand;
 import commands.InfoCommand;
 import lombok.Getter;
-import managers.CommandManager;
+import managers.ServerCommandManager;
 import modules.CommandWorkerModule;
 import modules.ConnectionModule;
 
@@ -21,9 +21,9 @@ public class Server {
     private Executor executor;
     private ServerSocket server;
     private ExecutorService threadPool;
-    private CommandManager commandManager;
+    private ServerCommandManager commandManager;
 
-    public Server(int port, CommandManager commandManager) {
+    public Server(int port, ServerCommandManager commandManager) {
         this.port = port;
         this.commandManager = commandManager;
 //        this.connectionModule = new ConnectionModule(port);
