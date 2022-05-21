@@ -37,7 +37,7 @@ public class AddCommand extends AbstractCommand {
         if (ClientCommandManager.fileMode) {
             maker = new PersonMaker(commandManager.getScanners().getLast());
         } else {
-            maker = new PersonMaker(commandManager.getSc());
+            maker = new PersonMaker(ClientCommandManager.console);
         }
         PersonDto dto = maker.makeDto();
         try {

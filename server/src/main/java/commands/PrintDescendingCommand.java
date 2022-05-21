@@ -34,7 +34,6 @@ public class PrintDescendingCommand extends AbstractCommand {
         StringBuilder sb = new StringBuilder();
         collection.stream().sorted(new PersonDescendingOrderComparator()).forEachOrdered(person -> {
             sb.append(PersonFormatter.format(person)).append("\n");
-//            System.out.println(PersonFormatter.format(person));
         });
         return new Response<>(Response.Status.COMPLETED, "", sb.toString());
     }

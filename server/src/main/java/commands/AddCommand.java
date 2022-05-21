@@ -32,7 +32,7 @@ public class AddCommand extends AbstractCommand {
         try {
             collectionManager.add(person);
             System.out.println("Person has successfully added");
-            return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(person) + "Person has successfully added");
+            return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(person) + "\nPerson has successfully added");
         } catch (SecurityException e) {
             return new Response<>(Response.Status.FAILURE, "Person id must be unique");
         }

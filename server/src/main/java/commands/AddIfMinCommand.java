@@ -30,8 +30,6 @@ public class AddIfMinCommand extends AbstractCommand {
             System.out.println(e.getMessage());
             return new Response<>(Response.Status.FAILURE, e.getMessage());
         }
-//        if(ConsoleClient.fileMode) maker = new PersonMaker(ConsoleClient.getScanners().getLast());
-//        else maker = new PersonMaker(ConsoleClient.scanner);
         try {
             if (collectionManager.size() == 0) {
                 System.out.println("collection is empty");

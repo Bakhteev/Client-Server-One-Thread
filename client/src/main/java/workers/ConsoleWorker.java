@@ -24,6 +24,10 @@ public class ConsoleWorker {
         return scanner.next().replace("> ", "");
     }
 
+    public static void printParam(String str){
+        System.out.println("> " + str);
+    }
+
     public static void printError(String string){
         System.out.println("\u001B[31m" + string + "\u001B[0m");
     }

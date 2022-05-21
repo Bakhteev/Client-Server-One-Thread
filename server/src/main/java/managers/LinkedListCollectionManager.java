@@ -32,10 +32,6 @@ public class LinkedListCollectionManager {
             for (Integer id : setOfId) {
                 try {
                     long counter = this.collection.stream().filter(person -> id.equals(person.getId())).count();
-//                    for (Person element : this.collection) {
-//                        if (id.equals(element.getId()))
-//                            counter++;
-//                    }
                     if (counter > 1) {
                         throw new SecurityException("Person id must be unique, objects with this id - " + id + " will be removed.\nNumber of " +
                                 "objects: " + counter);
@@ -63,9 +59,6 @@ public class LinkedListCollectionManager {
     public void loadCollection(Person[] collection) {
         try {
             Arrays.stream(collection).forEach(PersonValidator::checkFields);
-//            for (Person person : collection) {
-//                PersonValidator.checkFields(person);
-//            }
             addAll(Arrays.asList(collection));
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

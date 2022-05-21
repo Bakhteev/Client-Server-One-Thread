@@ -46,22 +46,11 @@ public class UpdateCommand extends AbstractCommand {
             System.out.println(e.getMessage());
             return new Response<>(Response.Status.FAILURE, e.getMessage());
         }
-//        if (ConsoleClient.fileMode) {
-//            maker = new PersonMaker(ConsoleClient.getScanners().getLast());
-//        } else
-//            maker = new PersonMaker(ConsoleClient.scanner);
         try {
             Person personToUpdate = collectionManager.getElementById(Integer.parseInt(req.getParams()));
             if (personToUpdate == null) {
                 throw new PersonNotFoundException("Person with id: " + req.getParams() + "wasn't found");
             }
-//            if (!ConsoleClient.fileMode) {
-//                Fields.showFieldList();
-//                System.out.println("Choose param's names: ");
-//                System.out.print("> ");
-//            }
-//            String[] params = ConsoleClient.scanner.readLine().split(",");
-//            Arrays.stream(params).forEach(param -> maker.setPersonByFields(personToUpdate, param.replace(">", "").trim()));
             collectionManager.update(personToUpdate, (PersonDto) req.getBody());
             System.out.println(personToUpdate);
             return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.format(personToUpdate));

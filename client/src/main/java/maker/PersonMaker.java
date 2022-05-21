@@ -6,6 +6,7 @@ import models.*;
 import validators.PersonValidator;
 import workers.ConsoleWorker;
 
+import java.io.Console;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
@@ -14,21 +15,17 @@ public class PersonMaker {
 
     private Scanner userScanner = null;
     private final PersonValidator validator = new PersonValidator();
-    private Scanner console = null;
+    private Console console = null;
     boolean fileMode = ClientCommandManager.fileMode;
 
     public PersonMaker(Scanner userScanner) {
-        this.console = userScanner;
         this.userScanner = userScanner;
     }
-//    public maker.PersonMaker(Scanner userScanner) {
-//        this.console = userScanner;
-//    }
 
-//    public maker.PersonMaker(Console console) {
-//        this.console = console;
+    public PersonMaker(Console console) {
+        this.console = console;
 //        System.out.println(console.toString());
-//    }
+    }
 
     private void printArgumentSymbol() {
         System.out.print("> ");
@@ -37,7 +34,7 @@ public class PersonMaker {
 
     private void detectArgument(String argument) {
         if (!argument.startsWith(">")) {
-//            ConsoleClient.printParam("Wrong argument");
+            ConsoleWorker.printParam("Wrong argument");
             System.exit(0);
         }
     }
@@ -54,14 +51,14 @@ public class PersonMaker {
             detectArgument(name);
             name = convertStringAsArgument(name);
             validator.validateName(name);
-//            ConsoleClient.printParam(name);
+            ConsoleWorker.printParam(name);
 //            System.out.println("> " + name);
             return name;
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                name = console.next().trim();
+                name = console.readLine().trim();
                 validator.validateName(name);
                 return name;
             } catch (IllegalArgumentException e) {
@@ -79,14 +76,14 @@ public class PersonMaker {
             detectArgument(strX);
             strX = convertStringAsArgument(strX);
             validator.validateCoordinatesX(strX);
-//            ConsoleClient.printParam(strX);
+            ConsoleWorker.printParam(strX);
 //            System.out.println("> " + strX);
             return Integer.parseInt(strX);
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strX = console.next().trim();
+                strX = console.readLine().trim();
                 validator.validateCoordinatesX(strX);
                 return Integer.parseInt(strX);
             } catch (NumberFormatException e) {
@@ -107,13 +104,13 @@ public class PersonMaker {
 
             strY = convertStringAsArgument(strY);
             validator.validateCoordinatesY(strY);
-//            ConsoleClient.printParam(strY);
+            ConsoleWorker.printParam(strY);
             return Integer.parseInt(strY);
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strY = console.next().trim();
+                strY = console.readLine().trim();
                 validator.validateCoordinatesY(strY);
                 return Integer.parseInt(strY);
             } catch (NumberFormatException e) {
@@ -139,13 +136,13 @@ public class PersonMaker {
 
             strHeight = convertStringAsArgument(strHeight);
             validator.validateHeight(strHeight);
-//            ConsoleClient.printParam(strHeight);
+            ConsoleWorker.printParam(strHeight);
             return Long.parseLong(strHeight);
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strHeight = console.next().trim();
+                strHeight = console.readLine().trim();
                 validator.validateHeight(strHeight);
                 return Long.parseLong(strHeight);
             } catch (NumberFormatException e) {
@@ -164,13 +161,13 @@ public class PersonMaker {
             detectArgument(strWeight);
             strWeight = convertStringAsArgument(strWeight);
             validator.validateWeight(strWeight);
-//            ConsoleClient.printParam(strWeight);
+            ConsoleWorker.printParam(strWeight);
             return Float.parseFloat(strWeight);
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strWeight = console.next().trim();
+                strWeight = console.readLine().trim();
                 validator.validateWeight(strWeight);
                 return Float.parseFloat(strWeight);
             } catch (NumberFormatException e) {
@@ -188,7 +185,7 @@ public class PersonMaker {
             strColor = userScanner.nextLine().trim().toUpperCase();
             detectArgument(strColor);
             strColor = convertStringAsArgument(strColor);
-//            ConsoleClient.printParam(strColor);
+            ConsoleWorker.printParam(strColor);
             return EyesColor.valueOf(strColor);
 
         }
@@ -196,7 +193,7 @@ public class PersonMaker {
             try {
                 EyesColor.showColorsList();
                 printArgumentSymbol();
-                strColor = console.next().trim().toUpperCase();
+                strColor = console.readLine().trim().toUpperCase();
                 return EyesColor.valueOf(strColor);
             } catch (IllegalArgumentException e) {
                 System.out.println("Eyes color wasn't found.");
@@ -211,7 +208,7 @@ public class PersonMaker {
             strColor = userScanner.nextLine().trim().toUpperCase();
             detectArgument(strColor);
             strColor = convertStringAsArgument(strColor);
-//            ConsoleClient.printParam(strColor);
+            ConsoleWorker.printParam(strColor);
             return HairsColor.valueOf(strColor);
 
         }
@@ -219,7 +216,7 @@ public class PersonMaker {
             try {
                 HairsColor.showColorsList();
                 printArgumentSymbol();
-                strColor = console.next().trim().toUpperCase();
+                strColor = console.readLine().trim().toUpperCase();
                 return HairsColor.valueOf(strColor);
             } catch (IllegalArgumentException e) {
                 System.out.println("Hairs' color wasn't found.");
@@ -235,14 +232,14 @@ public class PersonMaker {
             detectArgument(strX);
             strX = convertStringAsArgument(strX);
             validator.validateLocationX(strX);
-//            ConsoleClient.printParam(strX);
+            ConsoleWorker.printParam(strX);
             return Long.parseLong(strX);
 
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strX = console.next().trim();
+                strX = console.readLine().trim();
                 validator.validateLocationX(strX);
                 return Long.parseLong(strX);
             } catch (NumberFormatException e) {
@@ -261,17 +258,17 @@ public class PersonMaker {
             detectArgument(strY);
             strY = convertStringAsArgument(strY);
             if (strY.isEmpty()) {
-//                ConsoleClient.printParam(strY);
+                ConsoleWorker.printParam(strY);
                 return null;
             }
-//            ConsoleClient.printParam(strY);
+            ConsoleWorker.printParam(strY);
             return Integer.parseInt(strY);
 
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strY = console.next().trim();
+                strY = console.readLine().trim();
                 if (strY.isEmpty()) {
                     return null;
                 }
@@ -290,13 +287,13 @@ public class PersonMaker {
             detectArgument(strZ);
             strZ = convertStringAsArgument(strZ);
             validator.validateLocationZ(strZ);
-//            ConsoleClient.printParam(strZ);
+            ConsoleWorker.printParam(strZ);
             return Float.parseFloat(strZ);
         }
         while (true) {
             try {
                 printArgumentSymbol();
-                strZ = console.next().trim();
+                strZ = console.readLine().trim();
                 validator.validateLocationZ(strZ);
                 return Float.parseFloat(strZ);
             } catch (NumberFormatException e) {
@@ -315,13 +312,13 @@ public class PersonMaker {
             detectArgument(name);
             name = convertStringAsArgument(name);
             validator.validateName(name);
-//            ConsoleClient.printParam(name);
+            ConsoleWorker.printParam(name);
             return name;
 
         }
         while (true) {
             printArgumentSymbol();
-            name = console.next().trim();
+            name = console.readLine().trim();
             try {
                 validator.validateName(name);
                 return name;
@@ -366,7 +363,7 @@ public class PersonMaker {
             Fields.showFieldList();
             ConsoleWorker.println("Choose param's names:");
             ConsoleWorker.printSymbol(false);
-            return console.nextLine().trim().split("(,\\s)|(,)");
+            return console.readLine().trim().split("(,\\s)|(,)");
         }
     }
 

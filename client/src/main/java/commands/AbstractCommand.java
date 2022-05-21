@@ -40,7 +40,7 @@ public abstract class AbstractCommand {
             ConsoleWorker.println((String) res.getBody());
             return true;
         } catch (IOException | ClassNotFoundException e) {
-            ConsoleWorker.printError(e.getMessage());
+            ConsoleWorker.printError("Something went wrong :3");
             return false;
         }
     }

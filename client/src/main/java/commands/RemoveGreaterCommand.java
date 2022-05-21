@@ -33,7 +33,13 @@ public class RemoveGreaterCommand extends AbstractCommand {
             ConsoleWorker.printError(e.getMessage());
             return false;
         }
-        PersonDto dto = new PersonMaker(ClientCommandManager.fileMode ? commandManager.getScanners().getLast() : commandManager.getSc()).makeDto();
+        PersonMaker maker;
+        if (ClientCommandManager.fileMode) {
+            maker = new PersonMaker(commandManager.getScanners().getLast());
+        } else {
+            maker = new PersonMaker(ClientCommandManager.console);
+        }
+        PersonDto dto = maker.makeDto();
         try {
             writer.sendRequest(new Request<>(getName(), "", dto));
         } catch (IOException e) {

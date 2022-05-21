@@ -13,12 +13,10 @@ public class ConnectionModule {
 
     public ConnectionModule(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-//        System.out.println("Server started on PORT: " + serverSocket.getLocalPort());
     }
 
     public void connect() throws IOException {
         System.out.println("Waiting...");
-//        assert serverSocket != null;
         clientSocket = serverSocket.accept();
     }
 

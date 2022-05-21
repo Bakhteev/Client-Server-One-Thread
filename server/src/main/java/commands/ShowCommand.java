@@ -28,10 +28,8 @@ public class ShowCommand extends AbstractCommand {
             return new Response<>(Response.Status.FAILURE, e.getMessage());
         }
         if (collection.size() == 0) {
-//            System.out.println("Collection is empty");
             return new Response(Response.Status.COMPLETED, "", "Collection is empty");
         }
-//        System.out.println(PersonFormatter.formatCollection(collection));
         return new Response<>(Response.Status.COMPLETED, "", PersonFormatter.formatCollection(collection));
     }
 }

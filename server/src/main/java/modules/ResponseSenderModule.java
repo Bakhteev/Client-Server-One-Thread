@@ -20,11 +20,6 @@ public class ResponseSenderModule {
         writer.flush();
     }
 
-    public void sendUTF(String message) throws IOException {
-        writer.writeUTF(message);
-        writer.flush();
-    }
-
     public void close() throws IOException {
         writer.close();
     }

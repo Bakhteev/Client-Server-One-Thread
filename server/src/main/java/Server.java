@@ -15,18 +15,13 @@ import java.util.concurrent.Executors;
 @Getter
 public class Server {
     private final int port;
-    //    private Output out;
-//    private Logger logger;
     ConnectionModule connectionModule;
-    private Executor executor;
-    private ServerSocket server;
     private ExecutorService threadPool;
     private ServerCommandManager commandManager;
 
     public Server(int port, ServerCommandManager commandManager) {
         this.port = port;
         this.commandManager = commandManager;
-//        this.connectionModule = new ConnectionModule(port);
         this.threadPool = Executors.newFixedThreadPool(1);
     }
 

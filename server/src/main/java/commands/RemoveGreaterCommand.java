@@ -32,9 +32,6 @@ public class RemoveGreaterCommand extends AbstractCommand {
             System.out.println(e.getMessage());
             return new Response<>(Response.Status.FAILURE, e.getMessage());
         }
-//        PersonMaker maker = new PersonMaker(ConsoleClient.fileMode ? ConsoleClient.getScanners().getLast() : ConsoleClient.scanner);
-//        if(ConsoleClient.fileMode) personMaker = new PersonMaker(ConsoleClient.getScanners().getLast());
-//        else personMaker = new PersonMaker(ConsoleClient.scanner);
         PersonDto dto = (PersonDto) req.getBody();
         Person personToCompare = new Person(
                 dto.getName(),

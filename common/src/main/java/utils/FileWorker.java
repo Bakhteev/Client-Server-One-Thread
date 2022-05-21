@@ -33,7 +33,6 @@ public class FileWorker {
             }
         } catch (NoReadableFileException | FileCanNotBeWrittenException | IOException e) {
             System.out.println(e.getMessage());
-//            System.exit(0);
         }
         try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
         ) {

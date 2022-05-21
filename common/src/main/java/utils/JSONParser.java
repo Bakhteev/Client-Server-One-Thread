@@ -17,7 +17,7 @@ public class JSONParser {
         }
     }
 
-    public String toJSON(Collection<?> collection) {
+    public static String toJSON(Collection<?> collection) {
         Gson gson = Converters.registerLocalDateTime(new GsonBuilder().setPrettyPrinting()).create();
         return gson.toJson(collection);
     }

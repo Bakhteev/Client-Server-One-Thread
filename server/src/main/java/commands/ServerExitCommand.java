@@ -3,29 +3,28 @@ package commands;
 import interaction.Request;
 import interaction.Response;
 import managers.LinkedListCollectionManager;
+import modules.CommandWorkerModule;
 import utils.FileWorker;
 import utils.JSONParser;
 
 import java.io.IOException;
 
-// TODO: ADD LOGGER
-
-public class SaveCommand extends AbstractCommand {
-    FileWorker fileWorker;
+public class ServerExitCommand extends AbstractCommand {
     LinkedListCollectionManager collectionManager;
+    FileWorker fileWorker;
 
-    public SaveCommand(LinkedListCollectionManager collectionManager, FileWorker fileWorker) {
-        super("save", "saves collection data to file", "");
-        this.fileWorker = fileWorker;
+    public ServerExitCommand(LinkedListCollectionManager collectionManager, FileWorker fileWorker) {
+        super("server_exit", "closes the server and saves progress", "");
         this.collectionManager = collectionManager;
+        this.fileWorker = fileWorker;
     }
 
     @Override
     public Response execute(Request req) {
         try {
             fileWorker.saveFile(JSONParser.toJSON(collectionManager.getCollection()));
-            collectionManager.setLastSaveTime();
-            System.out.println("Collection successfully saved");
+            CommandWorkerModule.close();
+            System.exit(0);
             return null;
         } catch (SecurityException exception) {
             System.out.println("\u001B[31mFile permission error!\u001B[0m");
