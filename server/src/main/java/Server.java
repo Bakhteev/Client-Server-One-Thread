@@ -31,7 +31,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Server started on PORT: " + port);
+        System.out.println("Server started on PORT: " + "\u001B[35m" + port + "\u001B[0m");
         return true;
     }
 

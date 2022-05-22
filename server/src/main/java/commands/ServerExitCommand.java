@@ -24,6 +24,7 @@ public class ServerExitCommand extends AbstractCommand {
         try {
             fileWorker.saveFile(JSONParser.toJSON(collectionManager.getCollection()));
             CommandWorkerModule.close();
+            System.out.println("\u001B[32mServer is closing\u001B[0m");
             System.exit(0);
             return null;
         } catch (SecurityException exception) {

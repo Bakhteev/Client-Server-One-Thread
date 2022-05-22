@@ -29,10 +29,14 @@ public class ClientCommandManager {
 
     public void startInteractiveMode() {
         while (true) {
-            ConsoleWorker.println("Enter Command: ");
-            ConsoleWorker.printSymbol(true);
-            String command = console.readLine().trim();
-            executeCommand(command);
+            try {
+                ConsoleWorker.println("Enter Command: ");
+                ConsoleWorker.printSymbol(true);
+                String command = console.readLine().trim();
+                executeCommand(command);
+            } catch (NullPointerException e) {
+                startInteractiveMode();
+            }
         }
     }
 
@@ -42,13 +46,12 @@ public class ClientCommandManager {
 
     public boolean executeCommand(String command) {
         try {
-        String[] userCommand = command.split(" ", 2);
+            String[] userCommand = command.split(" ", 2);
             if (!commands.containsKey(userCommand[0])) {
                 throw new NoSuchCommandException("No such command: " + userCommand[0]);
             }
-        return commands.get(userCommand[0]).execute(userCommand.length > 1 ? userCommand[1] : "");
-        }
-        catch (NoSuchCommandException e) {
+            return commands.get(userCommand[0]).execute(userCommand.length > 1 ? userCommand[1] : "");
+        } catch (NoSuchCommandException e) {
             ConsoleWorker.printError(e.getMessage());
             return false;
         }

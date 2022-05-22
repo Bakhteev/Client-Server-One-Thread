@@ -22,11 +22,10 @@ public class ServerCommandManager {
     public Response executeCommand(Request req) {
         try {
             if (!commands.containsKey(req.getCommand())) {
-                throw new NoSuchCommandException("No such command " + req.getCommand());
+                throw new NoSuchCommandException("No such command: " + req.getCommand());
             }
             return commands.get(req.getCommand()).execute(req);
         } catch (NoSuchCommandException e) {
-            System.out.println(e.getMessage() + " " + "Command manager");
             return new Response<>(Response.Status.FAILURE, e.getMessage());
         }
     }

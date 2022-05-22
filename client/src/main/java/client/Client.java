@@ -4,12 +4,12 @@ import commands.*;
 import communicate.RequestSender;
 import communicate.ResponseHandler;
 import managers.ClientCommandManager;
+import workers.ConsoleWorker;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.logging.Logger;
 
 public class Client {
     private static int port;
@@ -32,6 +32,7 @@ public class Client {
         try {
             socket = SocketChannel.open(new InetSocketAddress(host, port));
         } catch (IOException e) {
+            ConsoleWorker.printError(e.getMessage());
             return false;
         }
         return true;
@@ -72,11 +73,11 @@ public class Client {
                 socket = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(host), port));
                 reader.setReader(socket.socket().getInputStream());
                 writer.setWriter(socket.socket().getOutputStream());
-                System.out.println("Повторное подключение произведено успешно. Продолжение выполнения");
+                ConsoleWorker.println("\u001B[32mReconnection completed successfully. Continuation of execution.\u001B[0m");
                 return;
             } catch (IOException e) {
             }
-            System.out.println("\rОшибка подключения. Ожидание повторного подключения: " + sec + "/60 секунд");
+            ConsoleWorker.println("\rConnection error. Waiting for reconnect: " + sec + "/60 seconds");
             sec++;
             if (sec > 60) {
                 System.exit(0);

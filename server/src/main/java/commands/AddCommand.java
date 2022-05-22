@@ -1,4 +1,4 @@
-package commands; // TODO Fix all
+package commands;
 
 import dto.PersonDto;
 import interaction.Request;

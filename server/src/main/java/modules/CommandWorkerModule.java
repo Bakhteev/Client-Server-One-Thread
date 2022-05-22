@@ -22,12 +22,12 @@ public class CommandWorkerModule implements Runnable {
         try {
             writer = new ResponseSenderModule(clientSocket.getOutputStream());
         } catch (IOException e) {
-            System.out.println(e.getMessage() + " " + "writer");
+            System.out.println(e.getMessage());
         }
         try {
             reader = new RequestHandlerModule(clientSocket.getInputStream());
         } catch (IOException e) {
-            System.out.println(e.getMessage() + " reader");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -41,7 +41,6 @@ public class CommandWorkerModule implements Runnable {
             reader.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
-
         }
         try {
             clientSocket.close();
@@ -54,9 +53,8 @@ public class CommandWorkerModule implements Runnable {
         Request request = null;
         try {
             request = reader.readRequest();
-            System.out.println(request.toString());
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             close();
         }
         if (request == null) {
@@ -66,7 +64,7 @@ public class CommandWorkerModule implements Runnable {
         try {
             if (request.getCommand().equals("exit")) {
                 close();
-                System.out.println("client closed");
+                System.out.println("\u001B[34mСlient closed\u001B[0m");
                 return;
             }
             Response<?> res = commandManager.executeCommand(request);
